@@ -14,8 +14,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.trendz.AutoPoolIncomeActivity;
 import com.example.trendz.R;
+import com.example.trendz.RegisterActivity;
 import com.example.trendz.SessionManagement;
 import com.example.trendz.TeamIncomeActivity;
 import com.google.android.gms.ads.AdRequest;
@@ -25,12 +32,15 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.time.Instant;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
-    TextView LoginFullname, Loginusername;
+    TextView LoginFullname, Loginusername, TeamIncome, AutoPoolIncome, BalanceIncome;
     Button AutoPool, Team;
     private AdView mAdView, mAdView2, mAdView3, mAdView4;
 
@@ -42,12 +52,16 @@ public class HomeFragment extends Fragment {
         LoginFullname = root.findViewById(R.id.HomeLoginuserfullname);
         Loginusername = root.findViewById(R.id.HomeLoginusername);
         AutoPool = root.findViewById(R.id.Btnautopool);
-        Team = root.findViewById(R.id.Btnteampool);
+        Team = root.findViewById(R.id.Btnteam);
+        TeamIncome = root.findViewById(R.id.TxtHomeScreenTeamAmount);
+        AutoPoolIncome = root.findViewById(R.id.TxtHomeScreenAutoPoolAmount);
+        BalanceIncome = root.findViewById(R.id.Txthomescreenamount);
 
         SessionManagement sessionManagement = new SessionManagement(getActivity());
 
         String LoginUsername = sessionManagement.getSession("FullName");
         String LoginUserEmail = sessionManagement.getSession("username");
+        String LoginUserId = sessionManagement.getSession("id");
 
         LoginFullname.setText(LoginUsername);
         Loginusername.setText(LoginUserEmail);
@@ -81,6 +95,30 @@ public class HomeFragment extends Fragment {
         mAdView = root.findViewById(R.id.homeAdView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+        String URL = "http://restrictionsolution.com/ci/trendz_world/user/getincome?id=" + LoginUserId;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, URL,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject res = new JSONObject(response);
+                        TeamIncome.setText(res.getString("referral_incomme"));
+                        AutoPoolIncome.setText(res.getString("autopool_income"));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }
+        );
+        requestQueue.add(stringRequest);
 
         return root;
     }

@@ -86,7 +86,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/Txthomecreenamount"
+                            android:id="@+id/Txthomescreenamount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/Txthomescreenbalance"
@@ -195,7 +195,7 @@
                         android:layout_height="match_parent">
 
                         <TextView
-                            android:id="@+id/TxtHomeScreenTeamPoolBalance"
+                            android:id="@+id/TxtHomeScreenTeamBalance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="20dp"
@@ -207,10 +207,10 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/TxtHomeScreenTeamPoolAmount"
+                            android:id="@+id/TxtHomeScreenTeamAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/TxtHomeScreenTeamPoolBalance"
+                            android:layout_below="@+id/TxtHomeScreenTeamBalance"
                             android:layout_marginLeft="20dp"
                             android:layout_marginTop="5dp"
                             android:text="0.00"
@@ -234,7 +234,7 @@
                             android:src="@drawable/team_activation_new" />
 
                         <Button
-                            android:id="@+id/Btnteampool"
+                            android:id="@+id/Btnteam"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@android:color/transparent" />
