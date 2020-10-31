@@ -35,7 +35,9 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.time.Instant;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -56,6 +58,7 @@ public class HomeFragment extends Fragment {
         TeamIncome = root.findViewById(R.id.TxtHomeScreenTeamAmount);
         AutoPoolIncome = root.findViewById(R.id.TxtHomeScreenAutoPoolAmount);
         BalanceIncome = root.findViewById(R.id.Txthomescreenamount);
+        final NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("en", "in"));
 
         SessionManagement sessionManagement = new SessionManagement(getActivity());
 
@@ -105,8 +108,8 @@ public class HomeFragment extends Fragment {
                 public void onResponse(String response) {
                     try {
                         JSONObject res = new JSONObject(response);
-                        TeamIncome.setText(res.getString("referral_incomme"));
-                        AutoPoolIncome.setText(res.getString("autopool_income"));
+                        TeamIncome.setText(format.format(Double.parseDouble(res.getString("referral_incomme"))));
+                        AutoPoolIncome.setText(format.format(Double.parseDouble(res.getString("autopool_income"))));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
