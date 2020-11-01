@@ -110,6 +110,7 @@ public class HomeFragment extends Fragment {
                         JSONObject res = new JSONObject(response);
                         TeamIncome.setText(format.format(Double.parseDouble(res.getString("referral_incomme"))));
                         AutoPoolIncome.setText(format.format(Double.parseDouble(res.getString("autopool_income"))));
+                        BalanceIncome.setText(format.format(Double.parseDouble(String.valueOf(res.getLong("total_income")))));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

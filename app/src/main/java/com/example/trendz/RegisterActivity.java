@@ -141,6 +141,11 @@ public class RegisterActivity extends AppCompatActivity {
                 if (!Phone.getText().toString().equals("")) {
                     PhoneError.setVisibility(View.GONE);
                 }
+                if (Phone.getText().toString().length() < 10) {
+                    successBoolean = false;
+                    PhoneError.setText("Please enter valid phone number");
+                    PhoneError.setVisibility(View.VISIBLE);
+                }
 
                 if (SponsorID.getText().toString().equals("")) {
                     successBoolean = false;
@@ -251,6 +256,8 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     };
                     requestQueue.add(stringRequest);
+                } else {
+                    Register.setEnabled(true);
                 }
             }
         });
