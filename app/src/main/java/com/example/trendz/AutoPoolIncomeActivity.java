@@ -46,6 +46,7 @@ public class AutoPoolIncomeActivity extends AppCompatActivity {
     ProgressBar progressBar;
     String LoginUserId;
     public static final int ITEM_PER_AD = 4;
+    private AdView mAdView, mAdView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +58,23 @@ public class AutoPoolIncomeActivity extends AppCompatActivity {
         upArrow.setColorFilter(getResources().getColor(R.color.colorWhite), PorterDuff.Mode.SRC_ATOP);
         getSupportActionBar().setHomeAsUpIndicator(upArrow);
 
+        AdView adView = new AdView(this);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(String.valueOf(R.string.banner_unit));
+
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
+
+        mAdView = findViewById(R.id.adViewAutoPool1);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        mAdView2 = findViewById(R.id.adViewAutoPool2);
+        AdRequest adRequest2 = new AdRequest.Builder().build();
+        mAdView2.loadAd(adRequest2);
 
         recyclerView = findViewById(R.id.AutopoolRV);
         manager = new LinearLayoutManager(AutoPoolIncomeActivity.this);
@@ -143,7 +156,6 @@ public class AutoPoolIncomeActivity extends AppCompatActivity {
     }
 
     private void fetchData() {
-        Log.e("Fetch", "true " + PageIndex);
         RequestQueue requestQueue = Volley.newRequestQueue(AutoPoolIncomeActivity.this);
         String URL = "http://restrictionsolution.com/ci/trendz_world/user/getautopoolincomeentry?id=" + LoginUserId + "&index=" + PageIndex;
 

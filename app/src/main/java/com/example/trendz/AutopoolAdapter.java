@@ -1,6 +1,7 @@
 package com.example.trendz;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,15 +58,15 @@ public class AutopoolAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 autopoolViewHolder.date.setText(autopoolEntry.getDate());
             case  ADS_ITEM:
             default:
-//                BannerAdViewHolder adViewHolder = (BannerAdViewHolder) holder;
+//                BannerAdViewHolder bannerAdViewHolder = (BannerAdViewHolder) holder;
 //                AdView adView = (AdView) data.get(position);
-//                ViewGroup adCardView = (ViewGroup) adViewHolder.itemView;
+//                ViewGroup adCardView = (ViewGroup) bannerAdViewHolder.itemView;
 //
 //                if (adCardView.getChildCount() > 0) {
 //                    adCardView.removeAllViews();
 //                }
 //
-//                if (adView.getParent() != null) {
+//                if (adCardView.getParent() !=null) {
 //                    ((ViewGroup) adView.getParent()).removeView(adView);
 //                }
 //
