@@ -1,5 +1,12 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    mavenCentral()
+    flatDir{
+        dirs 'libs'
+    }
+}
+
 android {
     compileSdkVersion 29
 
@@ -38,4 +45,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.android.gms:play-services-ads:19.4.0'
+    implementation 'com.razorpay:checkout:1.5.16'
 }

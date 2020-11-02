@@ -63,7 +63,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                BannerAdViewHolder adViewHolder = (BannerAdViewHolder) holder;
 //                AdView adView = (AdView) data.get(position);
 //                ViewGroup adCardView = (ViewGroup) adViewHolder.itemView;
-
+//
 //                if (adCardView.getChildCount() > 0) {
 //                    adCardView.removeAllViews();
 //                }
@@ -71,7 +71,7 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //                if (adView.getParent() != null) {
 //                    ((ViewGroup) adView.getParent()).removeView(adView);
 //                }
-
+//
 //                adCardView.addView(adView);
         }
     }

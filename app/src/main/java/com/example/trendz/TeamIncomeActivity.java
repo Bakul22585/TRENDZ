@@ -84,7 +84,7 @@ public class TeamIncomeActivity extends AppCompatActivity {
         progressDialog.setCancelable(false); // set cancelable to false
         progressDialog.setMessage("Please Wait"); // set message
 
-        getBannerAds();
+//        getBannerAds();
 
         RequestQueue requestQueue = Volley.newRequestQueue(TeamIncomeActivity.this);
         String URL = "http://restrictionsolution.com/ci/trendz_world/user/getteamincomeentry?id=" + LoginUserId + "&index=" + PageIndex;
@@ -113,7 +113,8 @@ public class TeamIncomeActivity extends AppCompatActivity {
                         adapter = new TeamAdapter(TeamEntry, TeamIncomeActivity.this);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(manager);
-
+                        getBannerAds();
+                        loadBannerAds();
 
                         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
@@ -207,7 +208,6 @@ public class TeamIncomeActivity extends AppCompatActivity {
             adView.setAdUnitId(String.valueOf(R.string.banner_unit));
             TeamEntry.add(i, adView);
         }
-        loadBannerAds();
     }
 
     private void loadBannerAds() {

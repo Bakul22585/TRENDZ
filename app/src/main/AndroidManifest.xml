@@ -30,6 +30,10 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
 
+        <meta-data
+            android:name="com.razorpay.ApiKey"
+            android:value="rzp_test_tzBplcvliTHbBG"/>
+
         <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
