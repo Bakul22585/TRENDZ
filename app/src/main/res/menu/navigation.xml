@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_profiles"
-        android:orderInCategory="100"
         android:title="@string/menu_profiles"
+        android:icon="@drawable/ic_baseline_person_gray24"
         app:showAsAction="never" />
     <item
         android:id="@+id/menu_logout"
-        android:orderInCategory="100"
         android:title="@string/menu_logout"
+        android:icon="@drawable/ic_baseline_power_settings_new_gray24"
         app:showAsAction="never" />
 </menu>

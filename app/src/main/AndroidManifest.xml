@@ -13,8 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AutoPoolIncomeActivity" android:parentActivityName=".NavigationActivity"></activity>
-        <activity android:name=".TeamIncomeActivity" android:parentActivityName=".NavigationActivity"/>
+        <activity android:name=".ProfileActivity" android:parentActivityName=".NavigationActivity"></activity>
+        <activity
+            android:name=".AutoPoolIncomeActivity"
+            android:parentActivityName=".NavigationActivity" />
+        <activity
+            android:name=".TeamIncomeActivity"
+            android:parentActivityName=".NavigationActivity" />
         <activity
             android:name=".NavigationActivity"
             android:label="@string/title_activity_navigation"
@@ -22,20 +27,27 @@
         <activity
             android:name=".LogoActivity"
             android:noHistory="true"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".RestpasswordActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".ForgotPasswordActivity" android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".RestpasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
-
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="rzp_test_tzBplcvliTHbBG"/>
+            android:value="rzp_test_tzBplcvliTHbBG" />
 
-        <activity android:name=".RegisterActivity" android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".MainActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

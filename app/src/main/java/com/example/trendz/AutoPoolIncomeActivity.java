@@ -6,12 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
 
@@ -214,5 +217,28 @@ public class AutoPoolIncomeActivity extends AppCompatActivity {
                 adView.loadAd(new AdRequest.Builder().build());
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.navigation, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_logout:
+                SessionManagement sessionManagement = new SessionManagement(this);
+                sessionManagement.ClearSession();
+                finish();
+                startActivity(new Intent(AutoPoolIncomeActivity.this, MainActivity.class));
+                break;
+            case R.id.menu_profiles:
+                startActivity(new Intent(AutoPoolIncomeActivity.this, ProfileActivity.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

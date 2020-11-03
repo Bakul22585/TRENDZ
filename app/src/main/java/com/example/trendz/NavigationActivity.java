@@ -121,6 +121,9 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
                 finish();
                 startActivity(new Intent(NavigationActivity.this, MainActivity.class));
                 break;
+            case R.id.menu_profiles:
+                startActivity(new Intent(NavigationActivity.this, ProfileActivity.class));
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
