@@ -48,6 +48,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView FullNameError, MobileError, PasswordError, ConfirmPasswordError;
     CheckBox EditPassword;
     Button Update;
+    String LoginUserId;
     private AdView mAdView;
 
     @Override
@@ -93,6 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         String LoginUsername = sessionManagement.getSession("FullName");
         String LoginUserMobile = sessionManagement.getSession("Mobile");
+        LoginUserId = sessionManagement.getSession("id");
 
         FullName.setText(LoginUsername);
         Mobile.setText(LoginUserMobile);
@@ -199,9 +201,11 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         protected Map<String,String> getParams(){
                             Map<String,String> params = new HashMap<String, String>();
+                            params.put("id", LoginUserId);
                             params.put("fullname", FullName.getText().toString());
                             params.put("mobile", Mobile.getText().toString());
                             params.put("password", Password.getText().toString());
+                            params.put("passwordStatus", String.valueOf(EditPassword.isChecked()));
                             return params;
                         }
                     };

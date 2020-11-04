@@ -18,6 +18,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -47,6 +57,9 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
     String LoginUserId, LoginUsername, LoginUserEmail, LoginUserMobile;
     ProgressDialog progressDialog;
     FloatingActionButton fab;
+    private long BackPressedTime;
+    private Toast BackToast;
+    private RewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +69,26 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
         setSupportActionBar(toolbar);
 
         Checkout.preload(getApplicationContext());
+
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        this.rewardedAd = new RewardedAd(this, "ca-app-pub-2068548834150924/4993393539");
+        RewardedAdLoadCallback callback = new RewardedAdLoadCallback(){
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError loadAdError) {
+                super.onRewardedAdFailedToLoad(loadAdError);
+            }
+
+            @Override
+            public void onRewardedAdLoaded() {
+                super.onRewardedAdLoaded();
+            }
+        };
+        this.rewardedAd.loadAd(new AdRequest.Builder().build(), callback);
 
         progressDialog = new ProgressDialog(NavigationActivity.this, R.style.DialogTheme);
         progressDialog.setCancelable(false); // set cancelable to false
@@ -221,5 +254,49 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
     @Override
     public void onPaymentError(int i, String s) {
         Toast.makeText(getApplicationContext(), "Payment Failed" + s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        if (toolbar.getTitle().toString().equals("Home")) {
+            if (BackPressedTime + 2000 > System.currentTimeMillis()) {
+                BackToast.cancel();
+                finish();
+                super.onBackPressed();
+                if (this.rewardedAd.isLoaded()) {
+                    RewardedAdCallback callback = new RewardedAdCallback() {
+                        @Override
+                        public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                            Log.i("Show", "ads");
+                        }
+
+                        @Override
+                        public void onRewardedAdOpened() {
+                            super.onRewardedAdOpened();
+                        }
+
+                        @Override
+                        public void onRewardedAdClosed() {
+                            super.onRewardedAdClosed();
+                        }
+
+                        @Override
+                        public void onRewardedAdFailedToShow(AdError adError) {
+                            super.onRewardedAdFailedToShow(adError);
+                        }
+                    };
+
+                    this.rewardedAd.show(this, callback);
+                }
+                return;
+            } else {
+                BackToast = Toast.makeText(getApplicationContext(), "Press back again to exit", Toast.LENGTH_SHORT);
+                BackToast.show();
+            }
+            BackPressedTime = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
