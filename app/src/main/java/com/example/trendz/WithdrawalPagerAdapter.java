@@ -12,14 +12,13 @@ public class WithdrawalPagerAdapter extends FragmentPagerAdapter {
 
     private int numOfTabs;
     public WithdrawalPagerAdapter(FragmentManager fm, int numOfTabs) {
-        super(fm);
+        super(fm, numOfTabs);
         this.numOfTabs = numOfTabs;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        Log.e("Get Position", String.valueOf(position));
         switch (position) {
             case 0:
                 return new WithdrawalfundFragment();
@@ -33,12 +32,5 @@ public class WithdrawalPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return numOfTabs;
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        position = position+1;
-        return super.getPageTitle(position);
     }
 }

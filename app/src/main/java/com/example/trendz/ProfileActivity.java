@@ -42,6 +42,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -200,6 +201,22 @@ public class ProfileActivity extends AppCompatActivity {
                                 JSONObject responseData = new JSONObject(response);
                                 Toast.makeText(getApplicationContext(), responseData.getString("message"), Toast.LENGTH_SHORT).show();
                                 Update.setEnabled(true);
+                                if (responseData.getBoolean("success")) {
+                                    JSONArray UserDetails = responseData.getJSONArray("data");
+                                    JSONObject UserData = (JSONObject) UserDetails.get(0);
+                                    String id, FullName,username,mobile,sponsor,email, isJoin;
+                                    id = UserData.getString("id");
+                                    FullName = UserData.getString("fullname");
+                                    username = UserData.getString("username");
+                                    mobile = UserData.getString("mobile");
+                                    sponsor = UserData.getString("sponsor");
+                                    email = UserData.getString("email");
+                                    isJoin = UserData.getString("isActive");
+
+                                    User user = new User(id, FullName, email ,username, sponsor, mobile, isJoin);
+                                    SessionManagement sessionManagement = new SessionManagement(ProfileActivity.this);
+                                    sessionManagement.saveSession(user);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

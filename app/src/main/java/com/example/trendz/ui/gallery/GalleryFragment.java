@@ -32,6 +32,7 @@ public class GalleryFragment extends Fragment {
     TabLayout tabLayout;
     TabItem WithdrawalFund, WithdrawalList;
     ViewPager viewPager;
+    WithdrawalPagerAdapter withdrawalPagerAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,16 +44,16 @@ public class GalleryFragment extends Fragment {
         WithdrawalList = root.findViewById(R.id.withdrawalList);
         viewPager = root.findViewById(R.id.withdrawalviewPager);
 
-        WithdrawalPagerAdapter withdrawalPagerAdapter = new WithdrawalPagerAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        withdrawalPagerAdapter = new WithdrawalPagerAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(withdrawalPagerAdapter);
 
-        tabLayout.setSelectedTabIndicatorColor(Color.parseColor("#FF5400"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                if (tab.getPosition() == 0 ||tab.getPosition() == 1)
+                    withdrawalPagerAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -66,20 +67,7 @@ public class GalleryFragment extends Fragment {
             }
         });
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                tabLayout.setScrollPosition(position, 0, true);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         return root;
     }
