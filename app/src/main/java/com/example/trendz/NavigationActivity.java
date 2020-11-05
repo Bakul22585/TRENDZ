@@ -76,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
             }
         });
 
-        this.rewardedAd = new RewardedAd(this, "ca-app-pub-2068548834150924/4993393539");
+        this.rewardedAd = new RewardedAd(this, String.valueOf(R.string.reward_unit));
         RewardedAdLoadCallback callback = new RewardedAdLoadCallback(){
             @Override
             public void onRewardedAdFailedToLoad(LoadAdError loadAdError) {
@@ -152,6 +152,31 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
                 SessionManagement sessionManagement = new SessionManagement(this);
                 sessionManagement.ClearSession();
                 finish();
+                if (this.rewardedAd.isLoaded()) {
+                    RewardedAdCallback callback = new RewardedAdCallback() {
+                        @Override
+                        public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                            Log.i("Show", "ads");
+                        }
+
+                        @Override
+                        public void onRewardedAdOpened() {
+                            super.onRewardedAdOpened();
+                        }
+
+                        @Override
+                        public void onRewardedAdClosed() {
+                            super.onRewardedAdClosed();
+                        }
+
+                        @Override
+                        public void onRewardedAdFailedToShow(AdError adError) {
+                            super.onRewardedAdFailedToShow(adError);
+                        }
+                    };
+
+                    this.rewardedAd.show(this, callback);
+                }
                 startActivity(new Intent(NavigationActivity.this, MainActivity.class));
                 break;
             case R.id.menu_profiles:

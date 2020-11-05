@@ -7,6 +7,8 @@
     <!--Live Banner-->
     <string name="app_id">ca-app-pub-2068548834150924~6375778496</string>
     <string name="banner_unit">ca-app-pub-2068548834150924/4686188656</string>
+    <string name="reward_unit">ca-app-pub-2068548834150924/4993393539</string>
+
     <string name="title_activity_navigation">NavigationActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

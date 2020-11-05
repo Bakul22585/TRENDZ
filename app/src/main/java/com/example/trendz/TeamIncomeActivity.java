@@ -24,12 +24,18 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdCallback;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +56,7 @@ public class TeamIncomeActivity extends AppCompatActivity {
     String LoginUserId;
     public static final int ITEM_PER_AD = 4;
     private AdView mAdView, mAdView2;
+    private RewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,20 @@ public class TeamIncomeActivity extends AppCompatActivity {
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
+
+        this.rewardedAd = new RewardedAd(this, String.valueOf(R.string.reward_unit));
+        RewardedAdLoadCallback callback = new RewardedAdLoadCallback(){
+            @Override
+            public void onRewardedAdFailedToLoad(LoadAdError loadAdError) {
+                super.onRewardedAdFailedToLoad(loadAdError);
+            }
+
+            @Override
+            public void onRewardedAdLoaded() {
+                super.onRewardedAdLoaded();
+            }
+        };
+        this.rewardedAd.loadAd(new AdRequest.Builder().build(), callback);
 
         mAdView = findViewById(R.id.adViewTeamIncome1);
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -238,6 +259,31 @@ public class TeamIncomeActivity extends AppCompatActivity {
                 SessionManagement sessionManagement = new SessionManagement(this);
                 sessionManagement.ClearSession();
                 finish();
+                if (this.rewardedAd.isLoaded()) {
+                    RewardedAdCallback callback = new RewardedAdCallback() {
+                        @Override
+                        public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                            Log.i("Show", "ads");
+                        }
+
+                        @Override
+                        public void onRewardedAdOpened() {
+                            super.onRewardedAdOpened();
+                        }
+
+                        @Override
+                        public void onRewardedAdClosed() {
+                            super.onRewardedAdClosed();
+                        }
+
+                        @Override
+                        public void onRewardedAdFailedToShow(AdError adError) {
+                            super.onRewardedAdFailedToShow(adError);
+                        }
+                    };
+
+                    this.rewardedAd.show(this, callback);
+                }
                 startActivity(new Intent(TeamIncomeActivity.this, MainActivity.class));
                 break;
             case R.id.menu_profiles:
