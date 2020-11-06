@@ -35,7 +35,7 @@
             android:layout_marginStart="48dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="48dp"
-            android:text="Withdrawal Fund"
+            android:text="Please Enter Bank Account Number"
             android:textColor="@color/colorPrimary"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -77,6 +77,69 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextWithdrawalifscCode" />
 
+        <Spinner
+            android:id="@+id/selectWithdrawOption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/round_border"
+            android:padding="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/withdrawalIfscCodeError" />
+
+        <TextView
+            android:id="@+id/selectWithdrawOptionError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="48dp"
+            android:text="Please Choose Any One Option"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectWithdrawOption" />
+
+        <EditText
+            android:id="@+id/editTextWithdrawAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/round_border"
+            android:drawableStart="@drawable/ic_baseline_indin_money_24"
+            android:drawablePadding="16dp"
+            android:ems="10"
+            android:hint="Enter Withdraw Amount"
+            android:inputType="number"
+            android:padding="16dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectWithdrawOptionError" />
+
+        <TextView
+            android:id="@+id/withdrawAmountError"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="48dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="48dp"
+            android:text="Please Enter Amount"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editTextWithdrawAmount" />
+
         <Button
             android:id="@+id/btnAddWithdrawalRequest"
             android:layout_width="0dp"
@@ -90,8 +153,9 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/withdrawalIfscCodeError" />
+            app:layout_constraintTop_toBottomOf="@+id/withdrawAmountError" />
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adViewWithdrawaRequest"
@@ -105,6 +169,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="0.991"/>
+            app:layout_constraintVertical_bias="0.991" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

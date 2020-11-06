@@ -33,6 +33,11 @@ public class SessionManagement {
         editor.commit();
     }
 
+    public void addNewSession(String Field, String value) {
+        editor.putString(SESSION_KEY + Field, value);
+        editor.commit();
+    }
+
     public String getSession(String Field){
         return sharedPreferences.getString(SESSION_KEY + Field, "");
     }

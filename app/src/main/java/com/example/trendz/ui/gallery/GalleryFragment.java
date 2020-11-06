@@ -44,15 +44,16 @@ public class GalleryFragment extends Fragment {
         WithdrawalList = root.findViewById(R.id.withdrawalList);
         viewPager = root.findViewById(R.id.withdrawalviewPager);
 
-        withdrawalPagerAdapter = new WithdrawalPagerAdapter(getActivity().getSupportFragmentManager(), tabLayout.getTabCount());
+        withdrawalPagerAdapter = new WithdrawalPagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(withdrawalPagerAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
 
-                if (tab.getPosition() == 0 ||tab.getPosition() == 1)
+                if (tab.getPosition() == 0 || tab.getPosition() == 1)
                     withdrawalPagerAdapter.notifyDataSetChanged();
             }
 
@@ -66,8 +67,6 @@ public class GalleryFragment extends Fragment {
 
             }
         });
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         return root;
     }

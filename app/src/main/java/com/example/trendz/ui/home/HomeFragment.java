@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         BalanceIncome = root.findViewById(R.id.Txthomescreenamount);
         final NumberFormat format = NumberFormat.getCurrencyInstance(new Locale("en", "in"));
 
-        SessionManagement sessionManagement = new SessionManagement(getActivity());
+        final SessionManagement sessionManagement = new SessionManagement(getActivity());
 
         String LoginUsername = sessionManagement.getSession("FullName");
         String LoginUserEmail = sessionManagement.getSession("username");
@@ -111,6 +111,8 @@ public class HomeFragment extends Fragment {
                         TeamIncome.setText(format.format(Double.parseDouble(res.getString("referral_incomme"))));
                         AutoPoolIncome.setText(format.format(Double.parseDouble(res.getString("autopool_income"))));
                         BalanceIncome.setText(format.format(Double.parseDouble(String.valueOf(res.getLong("total_income")))));
+                        sessionManagement.addNewSession("teamIncome", res.getString("referral_incomme"));
+                        sessionManagement.addNewSession("autoPoolIncome", res.getString("autopool_income"));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
