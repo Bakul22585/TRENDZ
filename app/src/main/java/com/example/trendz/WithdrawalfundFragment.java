@@ -1,5 +1,6 @@
 package com.example.trendz;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -23,8 +31,13 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,6 +62,7 @@ public class WithdrawalfundFragment extends Fragment {
     TextView BankAccountNumberError, BankIFSCCodeError, WithdrawOptionError, AmountError;
     Button Withdraw;
     int maxAmount;
+    String LoginUserId;
 
     public WithdrawalfundFragment() {
         // Required empty public constructor
@@ -98,7 +112,12 @@ public class WithdrawalfundFragment extends Fragment {
         AmountError = root.findViewById(R.id.withdrawAmountError);
         Withdraw = root.findViewById(R.id.btnAddWithdrawalRequest);
 
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
+        progressDialog.setCancelable(false); // set cancelable to false
+        progressDialog.setMessage("Please Wait"); // set message
+
         final SessionManagement sessionManagement = new SessionManagement(getActivity());
+        LoginUserId = sessionManagement.getSession("id");
 
         AdView adView = new AdView(getActivity());
         adView.setAdSize(AdSize.BANNER);
@@ -197,7 +216,61 @@ public class WithdrawalfundFragment extends Fragment {
                 }
 
                 if (successBoolean) {
-                    Toast.makeText(getActivity(), "Withdraw amount api in-progress.", Toast.LENGTH_SHORT).show();
+                    progressDialog.show();
+                    RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
+                    String URL = "http://restrictionsolution.com/ci/trendz_world/user/withdrawincome";
+
+                    StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                progressDialog.dismiss();
+                                Withdraw.setEnabled(true);
+                                BankAccountNumber.setText(""); BankIFSCCode.setText("");  Amount.setText("");
+                                WithdrawOption.setSelection(0);
+                                try {
+                                    JSONObject res = new JSONObject(response);
+                                    Toast.makeText(getActivity(), res.getString("message"), Toast.LENGTH_SHORT).show();
+                                    if (res.getBoolean("success")) {
+                                        sessionManagement.addNewSession("teamIncome", res.getString("referral_incomme"));
+                                        sessionManagement.addNewSession("autoPoolIncome", res.getString("autopool_income"));
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
+                            }
+                        }
+                    ) {
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            final Map<String, String> headers = new HashMap<>();
+                            headers.put("Content-Type", "application/x-www-form-urlencoded");
+
+                            return headers;
+                        }
+
+                        @Override
+                        protected Map<String,String> getParams(){
+                            Map<String,String> params = new HashMap<String, String>();
+                            params.put("user_id", LoginUserId);
+                            params.put("accountnumber", BankAccountNumber.getText().toString());
+                            params.put("ifsccode", BankIFSCCode.getText().toString());
+                            params.put("amount", Amount.getText().toString());
+                            if (WithdrawOption.getSelectedItem().toString().equals("Auto Pool Income")) {
+                                params.put("type", "2");
+                            }
+                            if (WithdrawOption.getSelectedItem().toString().equals("Team Income")) {
+                                params.put("type", "1");
+                            }
+                            return params;
+                        }
+                    };
+                    requestQueue.add(stringRequest);
                 } else {
                     Withdraw.setEnabled(true);
                 }
