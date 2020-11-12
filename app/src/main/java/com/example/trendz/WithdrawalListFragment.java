@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ public class WithdrawalListFragment extends Fragment {
     int CurrentItems, TotalItem, ScrollOutItem, PageIndex = 0;
     ProgressBar progressBar;
     String LoginUserId;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public WithdrawalListFragment() {
         // Required empty public constructor
@@ -116,13 +118,25 @@ public class WithdrawalListFragment extends Fragment {
         mAdView2.loadAd(adRequest2);
 
         recyclerView = root.findViewById(R.id.withdrawFundList);
+        swipeRefreshLayout = root.findViewById(R.id.withdrawalFundListSwipeRefresh);
         manager = new LinearLayoutManager(getActivity());
+
         SessionManagement sessionManagement = new SessionManagement(getActivity());
         LoginUserId = sessionManagement.getSession("id");
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity(), R.style.DialogTheme);
         progressDialog.setCancelable(false); // set cancelable to false
         progressDialog.setMessage("Please Wait"); // set message
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                PageIndex = 0;
+                WithdrawEntry.clear();
+                fetchData();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         RequestQueue requestQueue = Volley.newRequestQueue(getActivity());
         String URL = "http://restrictionsolution.com/ci/trendz_world/user/getwithdrawentrylist?id=" + LoginUserId + "&index=" + PageIndex;

@@ -24,16 +24,30 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintVertical_bias="0.991"></com.google.android.gms.ads.AdView>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/withdrawFundList"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/withdrawalFundListSwipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="55dp"
-            android:layout_marginBottom="55dp"
+            android:layout_marginTop="52dp"
+            android:layout_marginBottom="52dp"
+            android:backgroundTint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/withdrawFundList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="55dp"
+                android:layout_marginBottom="55dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/adViewWithdrawList2"
