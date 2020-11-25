@@ -60,12 +60,15 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
     private long BackPressedTime;
     private Toast BackToast;
     private RewardedAd rewardedAd;
+    NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        fab = findViewById(R.id.fab);
+        navigationView = findViewById(R.id.nav_view);
         setSupportActionBar(toolbar);
 
         Checkout.preload(getApplicationContext());
@@ -94,12 +97,18 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
         progressDialog.setCancelable(false); // set cancelable to false
         progressDialog.setMessage("Please Wait"); // set message
 
-        fab = findViewById(R.id.fab);
+
         SessionManagement sessionManagement = new SessionManagement(NavigationActivity.this);
         LoginUserId = sessionManagement.getSession("id");
         LoginUsername = sessionManagement.getSession("FullName");
         LoginUserEmail = sessionManagement.getSessionEmail();
         LoginUserMobile = sessionManagement.getSession("Mobile");
+
+        if (LoginUserId.equals("1")) {
+            navigationView.getMenu().findItem(R.id.nav_slideshow).setVisible(true);
+        } else {
+            navigationView.getMenu().findItem(R.id.nav_slideshow).setVisible(false);
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,12 +128,12 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+        /*navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
             @Override
             public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
                 Log.e("Menu", String.valueOf(destination.getId()));
             }
-        });
+        });*/
 
         View MenuHeader =  navigationView.getHeaderView(0);
         TextView menu_user = (TextView)MenuHeader.findViewById(R.id.MenuHeaderLoginUserName);

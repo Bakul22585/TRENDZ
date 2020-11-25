@@ -18,8 +18,8 @@
     <string name="action_settings">Settings</string>
 
     <string name="menu_home">Home</string>
-    <string name="menu_gallery">Withdrawal</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_gallery">Withdraw</string>
+    <string name="menu_slideshow">Withdraw Request</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_profiles">My Profile</string>
     <!-- TODO: Remove or change this placeholder text -->

@@ -1,10 +1,12 @@
 package com.example.trendz;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +27,11 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText FullName, Phone, SponsorID, SponsorName, Email, Password, ConfirmPassword, Activation;
     TextView FullNameError, PhoneError, SponsorIDError, EmailError, PasswordError, ConfirmPasswordError, ActivationError;
     Button Register;
-    String ActivationCode;
+    String ActivationCode, token;
     Boolean ActivationStatus = true;
     private AdView mAdView;
 
@@ -77,6 +84,15 @@ public class RegisterActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adView2);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    token = task.getResult();
+                }
+            }
+        });
 
         final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this, R.style.DialogTheme);
         progressDialog.setCancelable(false); // set cancelable to false
@@ -251,7 +267,9 @@ public class RegisterActivity extends AppCompatActivity {
                             params.put("sponsor", SponsorID.getText().toString());
                             params.put("email", Email.getText().toString());
                             params.put("password", Password.getText().toString());
+                            params.put("device_id", Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
                             params.put("activation", String.valueOf(ActivationStatus));
+                            params.put("device_token", token);
                             return params;
                         }
                     };

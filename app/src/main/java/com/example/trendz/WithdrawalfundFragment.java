@@ -228,6 +228,7 @@ public class WithdrawalfundFragment extends Fragment {
                                 Withdraw.setEnabled(true);
                                 BankAccountNumber.setText(""); BankIFSCCode.setText("");  Amount.setText("");
                                 WithdrawOption.setSelection(0);
+                                Log.e("withdrawincome res", response);
                                 try {
                                     JSONObject res = new JSONObject(response);
                                     Toast.makeText(getActivity(), res.getString("message"), Toast.LENGTH_SHORT).show();

@@ -41,6 +41,11 @@ import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdCallback;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView FullNameError, MobileError, PasswordError, ConfirmPasswordError;
     CheckBox EditPassword;
     Button Update;
-    String LoginUserId;
+    String LoginUserId, token;
     private AdView mAdView;
     private RewardedAd rewardedAd;
 
@@ -109,6 +114,15 @@ public class ProfileActivity extends AppCompatActivity {
         mAdView = findViewById(R.id.adViewProfileBottom);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (task.isSuccessful()) {
+                    token = task.getResult();
+                }
+            }
+        });
 
         final ProgressDialog progressDialog = new ProgressDialog(ProfileActivity.this, R.style.DialogTheme);
         progressDialog.setCancelable(false); // set cancelable to false
@@ -243,6 +257,7 @@ public class ProfileActivity extends AppCompatActivity {
                             params.put("fullname", FullName.getText().toString());
                             params.put("mobile", Mobile.getText().toString());
                             params.put("password", Password.getText().toString());
+                            params.put("device_token", token);
                             params.put("passwordStatus", String.valueOf(EditPassword.isChecked()));
                             return params;
                         }

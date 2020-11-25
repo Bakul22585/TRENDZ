@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "885800239248",
+    "firebase_url": "https://trendz-c4d5c.firebaseio.com",
+    "project_id": "trendz-c4d5c",
+    "storage_bucket": "trendz-c4d5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885800239248:android:8e1fac376734b025165815",
+        "android_client_info": {
+          "package_name": "com.example.trendz"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885800239248-25j7lajvtjplq2ruui53rktgpe0kecm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgCXFK1RReeQx3cHJhHY2aSiodhhLHQx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885800239248-25j7lajvtjplq2ruui53rktgpe0kecm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
