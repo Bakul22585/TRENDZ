@@ -1,9 +1,12 @@
-package com.example.trendz.ui;
+package com.example.trendz;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +23,16 @@ public class WithdrawRequestAdapter extends RecyclerView.Adapter {
 
     private List<Object> data;
     private Context context;
+    private OnItemClickListener Listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+        void onDeleteClick(int position);
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        Listener = listener;
+    }
 
     public WithdrawRequestAdapter(List<Object> data, Context context) {
         this.data = data;
@@ -30,7 +43,7 @@ public class WithdrawRequestAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_withdraw_request_list, parent, false);
-        return new WithdrawRequestViewHolder(view);
+        return new WithdrawRequestViewHolder(view, Listener);
     }
 
     @Override
@@ -54,7 +67,8 @@ public class WithdrawRequestAdapter extends RecyclerView.Adapter {
 
     public class WithdrawRequestViewHolder extends RecyclerView.ViewHolder {
         TextView number, name, accountNumber, IfscCode, amount, date;
-        public WithdrawRequestViewHolder(@NonNull View itemView) {
+        Button Pay;
+        public WithdrawRequestViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             number = itemView.findViewById(R.id.txtWithdrawRequestListNumber);
             name = itemView.findViewById(R.id.txtWithdrawRequestListUserName);
@@ -62,6 +76,23 @@ public class WithdrawRequestAdapter extends RecyclerView.Adapter {
             IfscCode = itemView.findViewById(R.id.txtWithdrawRequestListBankIFSCCode);
             amount = itemView.findViewById(R.id.txtWithdrawRequestListAmount);
             date = itemView.findViewById(R.id.txtWithdrawRequestListDate);
+            Pay = itemView.findViewById(R.id.btnWithdrawRequestListPay);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    listener.onItemClick(position);
+                }
+            });
+
+            Pay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    listener.onDeleteClick(position);
+                }
+            });
         }
     }
 }
