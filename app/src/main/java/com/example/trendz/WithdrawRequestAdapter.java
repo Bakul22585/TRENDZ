@@ -58,6 +58,10 @@ public class WithdrawRequestAdapter extends RecyclerView.Adapter {
         withdrawRequestViewHolder.IfscCode.setText(withdrawRequestEntry.getIfsc_code());
         withdrawRequestViewHolder.amount.setText(format.format(Double.parseDouble(withdrawRequestEntry.getAmount())));
         withdrawRequestViewHolder.date.setText(withdrawRequestEntry.getDate());
+
+        if (withdrawRequestEntry.getStatus().equals("1")){
+            withdrawRequestViewHolder.Pay.setVisibility(View.GONE);
+        }
     }
 
     @Override

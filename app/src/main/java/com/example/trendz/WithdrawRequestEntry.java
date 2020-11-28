@@ -9,11 +9,12 @@ public class WithdrawRequestEntry {
     private String account_number;
     private String ifsc_code;
     private String amount;
+    private String status;
     private String date;
 
     public WithdrawRequestEntry() {}
 
-    public WithdrawRequestEntry(String id, String user_id, String number, String name, String account_number, String ifsc_code, String amount, String date) {
+    public WithdrawRequestEntry(String id, String user_id, String number, String name, String account_number, String ifsc_code, String amount, String status, String date) {
         this.id = id;
         this.user_id = user_id;
         this.number = number;
@@ -21,6 +22,7 @@ public class WithdrawRequestEntry {
         this.account_number = account_number;
         this.ifsc_code = ifsc_code;
         this.amount = amount;
+        this.status = status;
         this.date = date;
     }
 
@@ -78,6 +80,14 @@ public class WithdrawRequestEntry {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDate() {

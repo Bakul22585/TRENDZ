@@ -176,6 +176,7 @@ public class SlideshowFragment extends Fragment {
                                 withdrawRequestEntry.setIfsc_code(UserData.getString("ifsccode"));
                                 withdrawRequestEntry.setAmount(UserData.getString("amount"));
                                 withdrawRequestEntry.setDate(UserData.getString("created"));
+                                withdrawRequestEntry.setStatus(UserData.getString("status"));
                                 WithdrawRequestEntry.add(withdrawRequestEntry);
                             }
                             adapter = new WithdrawRequestAdapter(WithdrawRequestEntry, getActivity());
