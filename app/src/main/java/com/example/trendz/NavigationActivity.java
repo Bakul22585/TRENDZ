@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,8 +32,10 @@ import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
-import com.razorpay.Checkout;
-import com.razorpay.PaymentResultListener;
+import com.paykun.sdk.PaykunApiCall;
+import com.paykun.sdk.eventbus.Events;
+import com.paykun.sdk.eventbus.GlobalBus;
+import com.paykun.sdk.helper.PaykunHelper;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,13 +48,15 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NavigationActivity extends AppCompatActivity implements PaymentResultListener {
+public class NavigationActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     String LoginUserId, LoginUsername, LoginUserEmail, LoginUserMobile;
@@ -70,8 +75,6 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
         fab = findViewById(R.id.fab);
         navigationView = findViewById(R.id.nav_view);
         setSupportActionBar(toolbar);
-
-        Checkout.preload(getApplicationContext());
 
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
@@ -114,7 +117,6 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
             @Override
             public void onClick(View view) {
                 startPayment();
-
             }
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -203,91 +205,108 @@ public class NavigationActivity extends AppCompatActivity implements PaymentResu
     }
 
     public void startPayment() {
-        /**
-         * Instantiate Checkout
-         */
-        Checkout checkout = new Checkout();
-
-        /**
-         * Set your logo here
-         */
-        checkout.setImage(R.drawable.red_logo);
-
-        /**
-         * Reference to current activity
-         */
-        final Activity activity = this;
-
-        /**
-         * Pass your payment options to the Razorpay Checkout as a JSONObject
-         */
+        JSONObject object = new JSONObject();
         try {
-            JSONObject options = new JSONObject();
+            object.put("merchant_id", "984819566627936");
+            object.put("access_token", "46F3E535AD12515A39A99C5753EC084F");
+            object.put("customer_name",LoginUsername);
+            object.put("customer_email",LoginUserEmail);
+            object.put("customer_phone",LoginUserMobile);
+            object.put("product_name", "Join Fee");
+            object.put("order_no",System.currentTimeMillis()); // order no. should have 10 to 30 character in numeric format
+            object.put("amount","2000");  // minimum amount should be 10
+            object.put("isLive",false); // need to send false if you are in sandbox mode
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        new PaykunApiCall.Builder(NavigationActivity.this).sendJsonObject(object); // Paykun api to initialize your payment and send info.
+    }
 
-            options.put("name", LoginUsername);
-//            options.put("description", "Reference No. #123456");
-            options.put("image", "https://s3.amazonaws.com/rzp-mobile/images/rzp.png");
-//            options.put("order_id", "order_DBJOWzybf0sJbb");//from response of step 3.
-            options.put("theme.color", "#FF5400");
-            options.put("currency", "INR");
-            options.put("amount", "200000");//pass amount in currency subunits
-            options.put("prefill.email", LoginUserEmail);
-            options.put("prefill.contact",LoginUserMobile);
-            options.put("prefill.method", "card");
-            checkout.open(activity, options);
-        } catch(Exception e) {
-            Log.e("TAG", "Error in starting Razorpay Checkout", e);
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void getResults(Events.PaymentMessage message) {
+        if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_SUCCESS)){
+            // do your stuff here
+            // message.getTransactionId() will return your failed or succeed transaction id
+            /* if you want to get your transaction detail call message.getTransactionDetail()
+             *  getTransactionDetail return all the field from server and you can use it here as per your need
+             *  For Example you want to get Order id from detail use message.getTransactionDetail().order.orderId */
+            if(!TextUtils.isEmpty(message.getTransactionId())) {
+                fab.setVisibility(View.GONE);
+                Toast.makeText(getApplicationContext(), "Your payment has been received successfully", Toast.LENGTH_SHORT).show();
+                progressDialog.show();
+                RequestQueue requestQueue = Volley.newRequestQueue(NavigationActivity.this);
+                String URL = "http://restrictionsolution.com/ci/trendz_world/user/join";
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            progressDialog.dismiss();
+                            try {
+                                JSONObject res = new JSONObject(response);
+                                Toast.makeText(getApplicationContext(), res.getString("message"), Toast.LENGTH_LONG).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
+                        }
+                    }
+                ) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        final Map<String, String> headers = new HashMap<>();
+                        headers.put("Content-Type", "application/x-www-form-urlencoded");
+
+                        return headers;
+                    }
+
+                    @Override
+                    protected Map<String,String> getParams(){
+                        Map<String,String> params = new HashMap<String, String>();
+                        params.put("id", LoginUserId);
+                        return params;
+                    }
+                };
+
+                requestQueue.add(stringRequest);
+            }
+        }
+        else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_FAILED)){
+            // do your stuff here
+            Toast.makeText(NavigationActivity.this,"Your Transaction is failed",Toast.LENGTH_SHORT).show();
+        }
+        else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_SERVER_ISSUE)){
+            // do your stuff here
+            Toast.makeText(NavigationActivity.this,PaykunHelper.MESSAGE_SERVER_ISSUE,Toast.LENGTH_SHORT).show();
+        }else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_ACCESS_TOKEN_MISSING)){
+            // do your stuff here
+            Toast.makeText(NavigationActivity.this,"Access Token missing",Toast.LENGTH_SHORT).show();
+        }
+        else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_MERCHANT_ID_MISSING)){
+            // do your stuff here
+            Toast.makeText(NavigationActivity.this,"Merchant Id is missing",Toast.LENGTH_SHORT).show();
+        }
+        else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_INVALID_REQUEST)){
+            Toast.makeText(NavigationActivity.this,"Invalid Request",Toast.LENGTH_SHORT).show();
+        }
+        else if(message.getResults().equalsIgnoreCase(PaykunHelper.MESSAGE_NETWORK_NOT_AVAILABLE)){
+            Toast.makeText(NavigationActivity.this,"Network is not available",Toast.LENGTH_SHORT).show();
         }
     }
-
     @Override
-    public void onPaymentSuccess(String s) {
-        fab.setVisibility(View.GONE);
-        Toast.makeText(getApplicationContext(), "Your payment has been received successfully", Toast.LENGTH_SHORT).show();
-        progressDialog.show();
-        RequestQueue requestQueue = Volley.newRequestQueue(NavigationActivity.this);
-        String URL = "http://restrictionsolution.com/ci/trendz_world/user/join";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URL,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    progressDialog.dismiss();
-                    try {
-                        JSONObject res = new JSONObject(response);
-                        Toast.makeText(getApplicationContext(), res.getString("message"), Toast.LENGTH_LONG).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    progressDialog.dismiss();
-                }
-            }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                final Map<String, String> headers = new HashMap<>();
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-
-                return headers;
-            }
-
-            @Override
-            protected Map<String,String> getParams(){
-                Map<String,String> params = new HashMap<String, String>();
-                params.put("id", LoginUserId);
-                return params;
-            }
-        };
-
-        requestQueue.add(stringRequest);
+    protected void onStart() {
+        super.onStart();
+        // Register this activity to listen to event.
+        GlobalBus.getBus().register(this);
     }
-
     @Override
-    public void onPaymentError(int i, String s) {
-        Toast.makeText(getApplicationContext(), "Payment Failed" + s, Toast.LENGTH_SHORT).show();
+    protected void onStop() {
+        super.onStop();
+        // Unregister from activity
+        GlobalBus.getBus().unregister(this);
     }
 
     @Override

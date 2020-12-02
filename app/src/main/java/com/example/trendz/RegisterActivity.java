@@ -142,6 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Register.setEnabled(false);
                 Boolean successBoolean = true;
+                progressDialog.show();
                 if (FullName.getText().toString().equals("")) {
                     successBoolean = false;
                     FullNameError.setVisibility(View.VISIBLE);
@@ -276,6 +277,7 @@ public class RegisterActivity extends AppCompatActivity {
                     requestQueue.add(stringRequest);
                 } else {
                     Register.setEnabled(true);
+                    progressDialog.dismiss();
                 }
             }
         });
